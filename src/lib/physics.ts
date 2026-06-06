@@ -181,11 +181,10 @@ export function stepPhysics(
     const targetPitchAngle = rawInput.pitch * maxAngleRad; // forward stick = positive pitch angle
 
     // Angle error
-    // In our convention:
-    // rollAngle is currentEuler.z
-    // pitchAngle is currentEuler.x
-    const rollError = targetRollAngle - currentEuler.z;
-    const pitchError = targetPitchAngle - currentEuler.x;
+    const rollAngle = -currentEuler.z;
+    const pitchAngle = -currentEuler.x;
+    const rollError = targetRollAngle - rollAngle;
+    const pitchError = targetPitchAngle - pitchAngle;
 
     // Target rate is proportional to angle error
     targetRollRate = rollError * settings.pid.angleP;
@@ -313,9 +312,10 @@ export function stepPhysics(
   // To rotate the quaternion using body-frame rotation rates:
   // q_new = q_old * q_delta
   // q_delta represents a rotation around the angular velocity axis by angularVel.length() * dt
-  const angleDelta = angularVel.length() * dt;
+  const rotationVector = new Vector3(-angularVel.y, -angularVel.z, -angularVel.x);
+  const angleDelta = rotationVector.length() * dt;
   if (angleDelta > EPSILON) {
-    const axis = angularVel.clone().normalize();
+    const axis = rotationVector.clone().normalize();
     const qDelta = new Quaternion().setFromAxisAngle(axis, angleDelta);
     currentQuat.multiply(qDelta).normalize();
   }

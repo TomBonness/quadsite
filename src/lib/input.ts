@@ -203,7 +203,7 @@ export function getUnifiedInput(settings: SimulatorSettings, dt: number): RawInp
   if (!input) {
     input = getKeyboardInput(settings.keyboardMapping, dt);
   }
-  
+  input.arm = keyboardArmed;
   return input;
 }
 
