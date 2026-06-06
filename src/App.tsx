@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import type { SimulatorSettings, DroneState } from './types/drone';
-import { Simulator, TRACK_GATES } from './components/Simulator';
+import { TRACK_GATES } from './types/drone';
+import { Simulator } from './components/Simulator';
 import { HUD } from './components/HUD';
 import { Settings } from './components/Settings';
 import { resetKeyboardThrottle } from './lib/input';
@@ -124,30 +125,19 @@ export default function App() {
   }, [settings.keyboardMapping]);
 
   return (
-    <div className="flex flex-col h-screen bg-[#0c0f12] text-zinc-100 select-none overflow-hidden">
-      
+    <div className="flex flex-col h-screen bg-white text-black select-none overflow-hidden">
       {/* Top Banner (Mini Swiss Style Status Header) */}
-      <header className="h-12 border-b border-zinc-800 bg-[#090b0d] px-6 flex items-center justify-between z-20 shrink-0 font-mono text-xs">
+      <header className="h-12 border-b border-zinc-200 bg-white px-6 flex items-center justify-between z-20 shrink-0 font-mono text-xs text-black">
         <div className="flex items-center gap-6">
-          <span className="font-black text-sm tracking-widest text-white uppercase flex items-center gap-2">
+          <span className="font-black text-sm tracking-widest text-black uppercase flex items-center gap-2">
             <span className="w-2.5 h-2.5 bg-red-600 inline-block" />
             ANTIGRAVITY SYSTEMS
           </span>
-          <span className="text-zinc-500 hidden sm:inline">|</span>
-          <span className="text-zinc-400 font-bold uppercase hidden sm:inline">
-            FPV SIMULATOR
-          </span>
         </div>
         <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2 text-zinc-400">
-            <span>FLIGHT STATE:</span>
-            <span className={`font-bold uppercase ${droneState.armed ? 'text-emerald-500' : 'text-zinc-500'}`}>
-              {droneState.armed ? 'Active' : 'Standby'}
-            </span>
-          </div>
           <button
             onClick={() => setHideSettings(prev => !prev)}
-            className="bg-zinc-800 hover:bg-zinc-700 text-white font-bold uppercase px-3 py-1 text-[10px] tracking-wider border border-zinc-700 rounded-none transition-colors"
+            className="bg-black hover:bg-zinc-800 text-white font-bold uppercase px-3 py-1.5 text-[10px] tracking-wider border border-black rounded-none transition-colors"
           >
             {hideSettings ? 'SHOW CONTROLS' : 'HIDE CONTROLS'}
           </button>
@@ -158,7 +148,7 @@ export default function App() {
       <div className="flex-1 flex flex-col min-h-0 relative">
         
         {/* Simulator Section */}
-        <div className={`relative min-h-0 transition-all duration-300 ${hideSettings ? 'flex-1' : 'h-[60%] border-b border-zinc-800'}`}>
+        <div className={`relative min-h-0 transition-all duration-300 ${hideSettings ? 'flex-1' : 'h-[60%] border-b border-zinc-200'}`}>
           <Simulator
             settings={settings}
             droneState={droneState}
@@ -173,9 +163,9 @@ export default function App() {
 
           {/* Hard Crash Overlay in Swiss style (Red box, bold text, no decoration) */}
           {crashed && (
-            <div className="absolute inset-0 bg-red-950/80 backdrop-blur-sm z-30 flex items-center justify-center pointer-events-auto">
-              <div className="bg-red-600 border-4 border-black text-black max-w-md w-full p-8 text-center rounded-none shadow-[10px_10px_0px_#000]">
-                <h2 className="text-4xl font-black tracking-tighter uppercase mb-4 animate-pulse">
+            <div className="absolute inset-0 bg-white/70 backdrop-blur-sm z-30 flex items-center justify-center pointer-events-auto">
+              <div className="bg-red-600 border-4 border-black text-black max-w-md w-full p-8 text-center rounded-none">
+                <h2 className="text-4xl font-black tracking-tighter uppercase mb-4">
                   CRASH DETECTED
                 </h2>
                 <p className="font-mono text-sm font-bold uppercase mb-6 leading-relaxed">
@@ -194,7 +184,7 @@ export default function App() {
 
         {/* Settings/Controls Dashboard */}
         {!hideSettings && (
-          <div className="h-[40%] min-h-[300px] overflow-y-auto flex shrink-0 border-t border-zinc-800">
+          <div className="h-[40%] min-h-[300px] overflow-y-auto flex shrink-0 border-t border-zinc-200">
             <Settings
               settings={settings}
               setSettings={setSettings}

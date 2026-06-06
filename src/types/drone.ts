@@ -133,3 +133,15 @@ export interface Gate {
   height: number;
   radius?: number; // if circular
 }
+
+export const TRACK_GATES: Gate[] = [
+  { id: 'gate-1', position: [0, 1.5, -20], rotation: [0, 0, 0], width: 4, height: 4 },
+  { id: 'gate-2', position: [15, 2.0, -35], rotation: [0, Math.PI / 4, 0], width: 4, height: 4 },
+  { id: 'gate-3', position: [35, 2.5, -30], rotation: [0, Math.PI / 2, 0], width: 4, height: 4 },
+  { id: 'gate-4', position: [40, 3.0, -5], rotation: [0, Math.PI * 0.75, 0], width: 4, height: 4 },
+  { id: 'gate-5', position: [25, 2.5, 20], rotation: [0, Math.PI, 0], width: 4, height: 4 },
+  { id: 'gate-6', position: [0, 2.0, 25], rotation: [0, Math.PI, 0], width: 4, height: 4 },
+  { id: 'gate-7', position: [-25, 2.5, 15], rotation: [0, -Math.PI * 0.75, 0], width: 4, height: 4 },
+  { id: 'gate-8', position: [-35, 2.0, -10], rotation: [0, -Math.PI / 2, 0], width: 4, height: 4 },
+  { id: 'gate-9', position: [-20, 1.5, -30], rotation: [0, -Math.PI / 4, 0], width: 4, height: 4 }
+];

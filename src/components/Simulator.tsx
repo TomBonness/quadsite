@@ -1,21 +1,10 @@
 import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
-import type { SimulatorSettings, DroneState, Gate } from '../types/drone';
+import type { SimulatorSettings, DroneState } from '../types/drone';
+import { TRACK_GATES } from '../types/drone';
 import { stepPhysics, PIDController } from '../lib/physics';
 import { getUnifiedInput } from '../lib/input';
 
-// Define the track gates
-export const TRACK_GATES: Gate[] = [
-  { id: 'gate-1', position: [0, 1.5, -20], rotation: [0, 0, 0], width: 4, height: 4 },
-  { id: 'gate-2', position: [15, 2.0, -35], rotation: [0, Math.PI / 4, 0], width: 4, height: 4 },
-  { id: 'gate-3', position: [35, 2.5, -30], rotation: [0, Math.PI / 2, 0], width: 4, height: 4 },
-  { id: 'gate-4', position: [40, 3.0, -5], rotation: [0, Math.PI * 0.75, 0], width: 4, height: 4 },
-  { id: 'gate-5', position: [25, 2.5, 20], rotation: [0, Math.PI, 0], width: 4, height: 4 },
-  { id: 'gate-6', position: [0, 2.0, 25], rotation: [0, Math.PI, 0], width: 4, height: 4 },
-  { id: 'gate-7', position: [-25, 2.5, 15], rotation: [0, -Math.PI * 0.75, 0], width: 4, height: 4 },
-  { id: 'gate-8', position: [-35, 2.0, -10], rotation: [0, -Math.PI / 2, 0], width: 4, height: 4 },
-  { id: 'gate-9', position: [-20, 1.5, -30], rotation: [0, -Math.PI / 4, 0], width: 4, height: 4 }
-];
 
 interface SimulatorProps {
   settings: SimulatorSettings;
@@ -78,8 +67,8 @@ export const Simulator: React.FC<SimulatorProps> = ({
     const height = container.clientHeight;
 
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x0c0f12); // dark Swiss Style BG
-    scene.fog = new THREE.FogExp2(0x0c0f12, 0.015);
+    scene.background = new THREE.Color(0xf4f4f6); // clean light gray Swiss BG
+    scene.fog = new THREE.FogExp2(0xf4f4f6, 0.015);
 
     const camera = new THREE.PerspectiveCamera(settingsRef.current.cameraFov, width / height, 0.05, 1000);
     
@@ -91,7 +80,7 @@ export const Simulator: React.FC<SimulatorProps> = ({
     container.appendChild(renderer.domElement);
 
     // 2. Add Lights
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
     scene.add(ambientLight);
 
     const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
@@ -112,7 +101,7 @@ export const Simulator: React.FC<SimulatorProps> = ({
     // Dark floor plane
     const floorGeo = new THREE.PlaneGeometry(1000, 1000);
     const floorMat = new THREE.MeshStandardMaterial({ 
-      color: 0x090b0d, 
+      color: 0xf4f4f6, 
       roughness: 0.9, 
       metalness: 0.1 
     });
@@ -122,11 +111,10 @@ export const Simulator: React.FC<SimulatorProps> = ({
     scene.add(floor);
 
     // Grid overlays (coarse grid + fine grid)
-    const gridHelperCoarse = new THREE.GridHelper(500, 50, 0x3b82f6, 0x1e293b); // primary grid (blue/dark grey)
+    const gridHelperCoarse = new THREE.GridHelper(500, 50, 0x000000, 0x000000); // sharp black
     gridHelperCoarse.position.y = 0.001; // offset slightly to prevent z-fighting
     scene.add(gridHelperCoarse);
-
-    const gridHelperFine = new THREE.GridHelper(500, 250, 0x1e293b, 0x111827); // fine grid (dark grey/darker)
+    const gridHelperFine = new THREE.GridHelper(500, 250, 0xe5e7eb, 0xe5e7eb); // subtle gray
     gridHelperFine.position.y = 0.0005;
     scene.add(gridHelperFine);
 
@@ -149,10 +137,10 @@ export const Simulator: React.FC<SimulatorProps> = ({
       // Next gate will be highlighted dynamically in the loop.
       const isStart = index === 0;
       const ringMat = new THREE.MeshStandardMaterial({
-        color: isStart ? 0x22c55e : 0xf97316,
-        emissive: isStart ? 0x15803d : 0x9a3412,
-        emissiveIntensity: 0.5,
-        roughness: 0.5
+        color: isStart ? 0x22c55e : 0x000000,
+        emissive: 0x000000,
+        emissiveIntensity: 0,
+        roughness: 0.8
       });
       const ringMesh = new THREE.Mesh(ringGeo, ringMat);
       ringMesh.castShadow = true;
@@ -162,7 +150,7 @@ export const Simulator: React.FC<SimulatorProps> = ({
 
       // Vertical poles holding the gate
       const poleGeo = new THREE.CylinderGeometry(0.08, 0.08, gate.position[1]);
-      const poleMat = new THREE.MeshStandardMaterial({ color: 0x475569, roughness: 0.7 });
+      const poleMat = new THREE.MeshStandardMaterial({ color: 0x000000, roughness: 0.8 });
       
       // Left pole
       const leftPole = new THREE.Mesh(poleGeo, poleMat);
@@ -179,7 +167,7 @@ export const Simulator: React.FC<SimulatorProps> = ({
       // Add simple visual text or banner on top of start/finish
       if (isStart) {
         const bannerGeo = new THREE.BoxGeometry(2.5, 0.5, 0.05);
-        const bannerMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.6 });
+        const bannerMat = new THREE.MeshStandardMaterial({ color: 0x000000, roughness: 0.8 });
         const banner = new THREE.Mesh(bannerGeo, bannerMat);
         banner.position.set(0, gateOuterRadius + 0.3, 0);
         gGroup.add(banner);
@@ -190,7 +178,7 @@ export const Simulator: React.FC<SimulatorProps> = ({
 
     // Add some fluorescent corner poles/flags for visual reference
     const flagGeo = new THREE.CylinderGeometry(0.1, 0.1, 5, 8);
-    const flagMat = new THREE.MeshStandardMaterial({ color: 0xef4444, emissive: 0x991b1b, emissiveIntensity: 0.2 });
+    const flagMat = new THREE.MeshStandardMaterial({ color: 0xef4444, roughness: 0.8 });
     const flagPositions: [number, number][] = [
       [50, 50], [50, -50], [-50, 50], [-50, -50],
       [100, 100], [100, -100], [-100, 100], [-100, -100]
@@ -326,20 +314,20 @@ export const Simulator: React.FC<SimulatorProps> = ({
           const isStart = idx === 0;
           
           if (isTarget) {
-            // Target gate glows cyan or neon yellow
-            mesh.material.color.setHex(0x06b6d4); // Cyan
-            mesh.material.emissive.setHex(0x0891b2);
-            mesh.material.emissiveIntensity = 1.0;
+            // Target gate is bright red, non-emissive
+            mesh.material.color.setHex(0xef4444);
+            mesh.material.emissive.setHex(0x000000);
+            mesh.material.emissiveIntensity = 0;
           } else if (isStart) {
-            // Start gate is green
+            // Start gate is green, non-emissive
             mesh.material.color.setHex(0x22c55e);
-            mesh.material.emissive.setHex(0x15803d);
-            mesh.material.emissiveIntensity = 0.4;
+            mesh.material.emissive.setHex(0x000000);
+            mesh.material.emissiveIntensity = 0;
           } else {
-            // Other gates are orange
-            mesh.material.color.setHex(0xf97316);
-            mesh.material.emissive.setHex(0x9a3412);
-            mesh.material.emissiveIntensity = 0.3;
+            // Other gates are black, non-emissive
+            mesh.material.color.setHex(0x000000);
+            mesh.material.emissive.setHex(0x000000);
+            mesh.material.emissiveIntensity = 0;
           }
         }
       });
@@ -392,7 +380,7 @@ export const Simulator: React.FC<SimulatorProps> = ({
       
       renderer.dispose();
     };
-  }, []); // Run once to set up context. Settings edits will update via refs.
+  }, [setDroneState]); // Run once to set up context. Settings edits will update via refs.
 
   return <div ref={containerRef} className="w-full h-full relative overflow-hidden" />;
 };

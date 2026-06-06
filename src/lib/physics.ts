@@ -134,7 +134,7 @@ export function stepPhysics(
     // Collision with ground
     let crashed = false;
     let nextVel = vel.toArray() as [number, number, number];
-    let nextPos = pos.toArray() as [number, number, number];
+    const nextPos = pos.toArray() as [number, number, number];
     
     if (pos.y <= 0.15) {
       if (Math.abs(vel.y) > 3.0) {
@@ -165,9 +165,8 @@ export function stepPhysics(
 
   // 1. Calculate Target Angular Rates (rad/s)
   // Pitch -> local X rotation, Roll -> local Z rotation, Yaw -> local Y rotation.
-  let targetRollRate = 0;
-  let targetPitchRate = 0;
-  let targetYawRate = 0;
+  let targetRollRate: number;
+  let targetPitchRate: number;
 
   // Convert quaternion to Euler angles to get current orientation in radians
   const currentQuat = new Quaternion(...state.quaternion);
@@ -198,7 +197,7 @@ export function stepPhysics(
   }
 
   // Yaw is always in Rate mode
-  targetYawRate = degSecToRadSec(calculateBetaflightRate(rawInput.yaw, settings.rates.yaw));
+  const targetYawRate = degSecToRadSec(calculateBetaflightRate(rawInput.yaw, settings.rates.yaw));
 
   // 2. PID Stabilization Loop
   // Gym input / gyro feedback (current angular velocity in body frame)

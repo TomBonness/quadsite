@@ -169,37 +169,36 @@ export const Settings: React.FC<SettingsProps> = ({ settings, setSettings, onRes
     });
 
     return (
-      <div className="relative border border-zinc-800 bg-[#090b0d] p-3 rounded-none">
-        <div className="text-[10px] text-zinc-400 uppercase tracking-widest font-black mb-2 flex justify-between">
+      <div className="relative border border-black bg-white p-3 rounded-none">
+        <div className="text-[10px] text-zinc-500 uppercase tracking-widest font-black mb-2 flex justify-between">
           <span>Rate Curve</span>
-          <span className="text-cyan-400">Max: {Math.round(maxRate)}°/s</span>
+          <span className="text-red-600">Max: {Math.round(maxRate)}°/s</span>
         </div>
         <svg width="100%" height="130" className="overflow-visible">
           {/* Horizontal grid lines */}
-          <line x1="0" y1={svgHeight * 0.25} x2={svgWidth} y2={svgHeight * 0.25} stroke="#18181b" strokeWidth="1" strokeDasharray="3,3" />
-          <line x1="0" y1={svgHeight * 0.5} x2={svgWidth} y2={svgHeight * 0.5} stroke="#18181b" strokeWidth="1" strokeDasharray="3,3" />
-          <line x1="0" y1={svgHeight * 0.75} x2={svgWidth} y2={svgHeight * 0.75} stroke="#18181b" strokeWidth="1" strokeDasharray="3,3" />
+          <line x1="0" y1={svgHeight * 0.25} x2={svgWidth} y2={svgHeight * 0.25} stroke="#e5e7eb" strokeWidth="1" strokeDasharray="3,3" />
+          <line x1="0" y1={svgHeight * 0.5} x2={svgWidth} y2={svgHeight * 0.5} stroke="#e5e7eb" strokeWidth="1" strokeDasharray="3,3" />
+          <line x1="0" y1={svgHeight * 0.75} x2={svgWidth} y2={svgHeight * 0.75} stroke="#e5e7eb" strokeWidth="1" strokeDasharray="3,3" />
           
           {/* Vertical grid lines */}
-          <line x1={svgWidth * 0.25} y1="0" x2={svgWidth * 0.25} y2={svgHeight} stroke="#18181b" strokeWidth="1" strokeDasharray="3,3" />
-          <line x1={svgWidth * 0.5} y1="0" x2={svgWidth * 0.5} y2={svgHeight} stroke="#18181b" strokeWidth="1" strokeDasharray="3,3" />
-          <line x1={svgWidth * 0.75} y1="0" x2={svgWidth * 0.75} y2={svgHeight} stroke="#18181b" strokeWidth="1" strokeDasharray="3,3" />
+          <line x1={svgWidth * 0.25} y1="0" x2={svgWidth * 0.25} y2={svgHeight} stroke="#e5e7eb" strokeWidth="1" strokeDasharray="3,3" />
+          <line x1={svgWidth * 0.5} y1="0" x2={svgWidth * 0.5} y2={svgHeight} stroke="#e5e7eb" strokeWidth="1" strokeDasharray="3,3" />
+          <line x1={svgWidth * 0.75} y1="0" x2={svgWidth * 0.75} y2={svgHeight} stroke="#e5e7eb" strokeWidth="1" strokeDasharray="3,3" />
 
           {/* Curve path */}
-          <path d={pathD} fill="none" stroke="#06b6d4" strokeWidth="2.5" />
+          <path d={pathD} fill="none" stroke="#ef4444" strokeWidth="3" />
         </svg>
       </div>
     );
   };
 
   return (
-    <div className="w-full bg-[#0c0f12] border-t border-zinc-800 text-zinc-100 flex flex-col font-sans p-6 z-20 shrink-0">
-      
+    <div className="w-full bg-white border-t border-zinc-200 text-black flex flex-col font-sans p-6 z-20 shrink-0">
       {/* Header (Swiss style layout: strict asymmetric columns) */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 border-b border-zinc-800 pb-6 mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 border-b border-zinc-200 pb-6 mb-6">
         <div className="md:col-span-2">
-          <h1 className="text-4xl font-black tracking-tighter uppercase text-white flex items-center gap-3">
-            <span className="bg-red-600 text-black px-2 py-0.5 select-none text-2xl font-black">FPV</span>
+          <h1 className="text-4xl font-black tracking-tighter uppercase text-black flex items-center gap-3">
+            <span className="bg-red-600 text-white px-2 py-0.5 select-none text-2xl font-black">FPV</span>
             SIM CALIBRATION
           </h1>
           <p className="text-zinc-500 font-sans text-xs mt-2 leading-relaxed tracking-wide">
@@ -207,14 +206,13 @@ export const Settings: React.FC<SettingsProps> = ({ settings, setSettings, onRes
             GRID MAPPINGS COMPLY WITH THE BETAFLIGHT RATE SPECIFICATION.
           </p>
         </div>
-        
         {/* Quick Toggles */}
         <div className="flex flex-col gap-2 justify-center font-mono text-xs">
-          <div className="flex justify-between items-center border-b border-zinc-900 py-1">
+          <div className="flex justify-between items-center border-b border-zinc-200 py-1">
             <span className="text-zinc-400 font-bold">FLIGHT MODE</span>
             <button 
               onClick={() => setSettings(prev => ({ ...prev, flightMode: prev.flightMode === 'ANGLE' ? 'ACRO' : 'ANGLE' }))}
-              className={`px-3 py-1 font-black rounded-none uppercase transition-all duration-150 ${settings.flightMode === 'ACRO' ? 'bg-cyan-500 text-black' : 'bg-zinc-800 text-white'}`}
+              className={`px-3 py-1 font-black rounded-none uppercase transition-all duration-150 border border-black ${settings.flightMode === 'ACRO' ? 'bg-black text-white' : 'bg-white text-black'}`}
             >
               {settings.flightMode}
             </button>
@@ -226,18 +224,17 @@ export const Settings: React.FC<SettingsProps> = ({ settings, setSettings, onRes
                 type="range" min="0" max="60" step="5"
                 value={settings.cameraUptilt}
                 onChange={e => setSettings(prev => ({ ...prev, cameraUptilt: parseInt(e.target.value) }))}
-                className="w-20 accent-cyan-500"
+                className="w-20 accent-red-600"
               />
-              <span className="text-white font-bold w-8 text-right">{settings.cameraUptilt}°</span>
+              <span className="text-black font-bold w-8 text-right">{settings.cameraUptilt}°</span>
             </div>
           </div>
         </div>
-
         {/* Global actions */}
         <div className="flex flex-col gap-2 justify-center font-mono">
           <button 
             onClick={onResetTrack}
-            className="w-full bg-white hover:bg-zinc-200 text-black font-black uppercase text-xs py-2 px-4 transition-colors tracking-widest rounded-none border border-white"
+            className="w-full bg-white hover:bg-zinc-100 text-black font-black uppercase text-xs py-2 px-4 transition-colors tracking-widest rounded-none border border-black"
           >
             RESET FLIGHT
           </button>
@@ -248,40 +245,39 @@ export const Settings: React.FC<SettingsProps> = ({ settings, setSettings, onRes
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 items-start">
         
         {/* Side Tabs navigation */}
-        <div className="flex flex-row md:flex-col border border-zinc-800 bg-[#090b0d] p-1 gap-1">
+        <div className="flex flex-row md:flex-col border border-black bg-white p-1 gap-1">
           <button
             onClick={() => setActiveTab('rates')}
-            className={`flex-1 md:flex-initial text-left px-4 py-3 font-black text-xs uppercase tracking-widest flex items-center gap-3 transition-all rounded-none ${activeTab === 'rates' ? 'bg-zinc-100 text-black' : 'hover:bg-zinc-900 text-zinc-400'}`}
+            className={`flex-1 md:flex-initial text-left px-4 py-3 font-black text-xs uppercase tracking-widest flex items-center gap-3 transition-all rounded-none border border-transparent ${activeTab === 'rates' ? 'bg-black text-white' : 'bg-white hover:bg-zinc-100 text-black hover:border-black'}`}
           >
             <Sliders size={14} />
             BETAFLIGHT RATES
           </button>
           <button
             onClick={() => setActiveTab('gamepad')}
-            className={`flex-1 md:flex-initial text-left px-4 py-3 font-black text-xs uppercase tracking-widest flex items-center gap-3 transition-all rounded-none ${activeTab === 'gamepad' ? 'bg-zinc-100 text-black' : 'hover:bg-zinc-900 text-zinc-400'}`}
+            className={`flex-1 md:flex-initial text-left px-4 py-3 font-black text-xs uppercase tracking-widest flex items-center gap-3 transition-all rounded-none border border-transparent ${activeTab === 'gamepad' ? 'bg-black text-white' : 'bg-white hover:bg-zinc-100 text-black hover:border-black'}`}
           >
             <Gamepad2 size={14} />
             RADIO CONTROLLER
           </button>
           <button
             onClick={() => setActiveTab('physics')}
-            className={`flex-1 md:flex-initial text-left px-4 py-3 font-black text-xs uppercase tracking-widest flex items-center gap-3 transition-all rounded-none ${activeTab === 'physics' ? 'bg-zinc-100 text-black' : 'hover:bg-zinc-900 text-zinc-400'}`}
+            className={`flex-1 md:flex-initial text-left px-4 py-3 font-black text-xs uppercase tracking-widest flex items-center gap-3 transition-all rounded-none border border-transparent ${activeTab === 'physics' ? 'bg-black text-white' : 'bg-white hover:bg-zinc-100 text-black hover:border-black'}`}
           >
             <SettingsIcon size={14} />
             PHYSICS TUNING
           </button>
         </div>
-
         {/* Main Tab Window */}
-        <div className="md:col-span-3 min-h-[260px] bg-[#090b0d] border border-zinc-800 p-6">
+        <div className="md:col-span-3 min-h-[260px] bg-white border border-black p-6">
           
           {/* Tab 1: Rates */}
           {activeTab === 'rates' && (
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 font-mono text-xs">
               
               {/* Roll settings */}
-              <div className="flex flex-col gap-4 border border-zinc-900 p-4">
-                <div className="text-sm font-black text-white uppercase border-b border-zinc-800 pb-2">Roll Rate</div>
+              <div className="flex flex-col gap-4 border border-black p-4 text-black bg-white">
+                <div className="text-sm font-black text-black uppercase border-b border-zinc-200 pb-2">Roll Rate</div>
                 <div className="flex flex-col gap-3">
                   <div className="flex justify-between items-center">
                     <span className="text-zinc-500 font-bold">RC RATE</span>
@@ -289,7 +285,7 @@ export const Settings: React.FC<SettingsProps> = ({ settings, setSettings, onRes
                       type="number" min="0.1" max="3.0" step="0.05"
                       value={settings.rates.roll.rcRate}
                       onChange={e => updateRate('roll', 'rcRate', parseFloat(e.target.value) || 1.0)}
-                      className="w-16 bg-zinc-950 border border-zinc-800 text-white font-bold p-1 text-center"
+                      className="w-16 bg-white border border-black text-black font-bold p-1 text-center"
                     />
                   </div>
                   <div className="flex justify-between items-center">
@@ -298,7 +294,7 @@ export const Settings: React.FC<SettingsProps> = ({ settings, setSettings, onRes
                       type="number" min="0.0" max="0.99" step="0.05"
                       value={settings.rates.roll.superRate}
                       onChange={e => updateRate('roll', 'superRate', parseFloat(e.target.value) || 0.0)}
-                      className="w-16 bg-zinc-950 border border-zinc-800 text-white font-bold p-1 text-center"
+                      className="w-16 bg-white border border-black text-black font-bold p-1 text-center"
                     />
                   </div>
                   <div className="flex justify-between items-center">
@@ -307,16 +303,15 @@ export const Settings: React.FC<SettingsProps> = ({ settings, setSettings, onRes
                       type="number" min="0.0" max="0.99" step="0.05"
                       value={settings.rates.roll.expo}
                       onChange={e => updateRate('roll', 'expo', parseFloat(e.target.value) || 0.0)}
-                      className="w-16 bg-zinc-950 border border-zinc-800 text-white font-bold p-1 text-center"
+                      className="w-16 bg-white border border-black text-black font-bold p-1 text-center"
                     />
                   </div>
                 </div>
                 {renderRateCurve(settings.rates.roll)}
               </div>
-
               {/* Pitch settings */}
-              <div className="flex flex-col gap-4 border border-zinc-900 p-4">
-                <div className="text-sm font-black text-white uppercase border-b border-zinc-800 pb-2">Pitch Rate</div>
+              <div className="flex flex-col gap-4 border border-black p-4 text-black bg-white">
+                <div className="text-sm font-black text-black uppercase border-b border-zinc-200 pb-2">Pitch Rate</div>
                 <div className="flex flex-col gap-3">
                   <div className="flex justify-between items-center">
                     <span className="text-zinc-500 font-bold">RC RATE</span>
@@ -324,7 +319,7 @@ export const Settings: React.FC<SettingsProps> = ({ settings, setSettings, onRes
                       type="number" min="0.1" max="3.0" step="0.05"
                       value={settings.rates.pitch.rcRate}
                       onChange={e => updateRate('pitch', 'rcRate', parseFloat(e.target.value) || 1.0)}
-                      className="w-16 bg-zinc-950 border border-zinc-800 text-white font-bold p-1 text-center"
+                      className="w-16 bg-white border border-black text-black font-bold p-1 text-center"
                     />
                   </div>
                   <div className="flex justify-between items-center">
@@ -333,7 +328,7 @@ export const Settings: React.FC<SettingsProps> = ({ settings, setSettings, onRes
                       type="number" min="0.0" max="0.99" step="0.05"
                       value={settings.rates.pitch.superRate}
                       onChange={e => updateRate('pitch', 'superRate', parseFloat(e.target.value) || 0.0)}
-                      className="w-16 bg-zinc-950 border border-zinc-800 text-white font-bold p-1 text-center"
+                      className="w-16 bg-white border border-black text-black font-bold p-1 text-center"
                     />
                   </div>
                   <div className="flex justify-between items-center">
@@ -342,7 +337,7 @@ export const Settings: React.FC<SettingsProps> = ({ settings, setSettings, onRes
                       type="number" min="0.0" max="0.99" step="0.05"
                       value={settings.rates.pitch.expo}
                       onChange={e => updateRate('pitch', 'expo', parseFloat(e.target.value) || 0.0)}
-                      className="w-16 bg-zinc-950 border border-zinc-800 text-white font-bold p-1 text-center"
+                      className="w-16 bg-white border border-black text-black font-bold p-1 text-center"
                     />
                   </div>
                 </div>
@@ -350,8 +345,8 @@ export const Settings: React.FC<SettingsProps> = ({ settings, setSettings, onRes
               </div>
 
               {/* Yaw settings */}
-              <div className="flex flex-col gap-4 border border-zinc-900 p-4">
-                <div className="text-sm font-black text-white uppercase border-b border-zinc-800 pb-2">Yaw Rate</div>
+              <div className="flex flex-col gap-4 border border-black p-4 text-black bg-white">
+                <div className="text-sm font-black text-black uppercase border-b border-zinc-200 pb-2">Yaw Rate</div>
                 <div className="flex flex-col gap-3">
                   <div className="flex justify-between items-center">
                     <span className="text-zinc-500 font-bold">RC RATE</span>
@@ -359,7 +354,7 @@ export const Settings: React.FC<SettingsProps> = ({ settings, setSettings, onRes
                       type="number" min="0.1" max="3.0" step="0.05"
                       value={settings.rates.yaw.rcRate}
                       onChange={e => updateRate('yaw', 'rcRate', parseFloat(e.target.value) || 1.0)}
-                      className="w-16 bg-zinc-950 border border-zinc-800 text-white font-bold p-1 text-center"
+                      className="w-16 bg-white border border-black text-black font-bold p-1 text-center"
                     />
                   </div>
                   <div className="flex justify-between items-center">
@@ -368,7 +363,7 @@ export const Settings: React.FC<SettingsProps> = ({ settings, setSettings, onRes
                       type="number" min="0.0" max="0.99" step="0.05"
                       value={settings.rates.yaw.superRate}
                       onChange={e => updateRate('yaw', 'superRate', parseFloat(e.target.value) || 0.0)}
-                      className="w-16 bg-zinc-950 border border-zinc-800 text-white font-bold p-1 text-center"
+                      className="w-16 bg-white border border-black text-black font-bold p-1 text-center"
                     />
                   </div>
                   <div className="flex justify-between items-center">
@@ -377,7 +372,7 @@ export const Settings: React.FC<SettingsProps> = ({ settings, setSettings, onRes
                       type="number" min="0.0" max="0.99" step="0.05"
                       value={settings.rates.yaw.expo}
                       onChange={e => updateRate('yaw', 'expo', parseFloat(e.target.value) || 0.0)}
-                      className="w-16 bg-zinc-950 border border-zinc-800 text-white font-bold p-1 text-center"
+                      className="w-16 bg-white border border-black text-black font-bold p-1 text-center"
                     />
                   </div>
                 </div>
@@ -390,14 +385,13 @@ export const Settings: React.FC<SettingsProps> = ({ settings, setSettings, onRes
           {/* Tab 2: Gamepad Calibration */}
           {activeTab === 'gamepad' && (
             <div className="flex flex-col gap-6 font-mono text-xs">
-              <div className="border border-zinc-900 p-4">
-                <div className="text-sm font-black text-white uppercase border-b border-zinc-800 pb-2 mb-4 flex justify-between items-center">
+              <div className="border border-black p-4 bg-white text-black">
+                <div className="text-sm font-black text-black uppercase border-b border-zinc-200 pb-2 mb-4 flex justify-between items-center">
                   <span>Radio Mappings</span>
                   <span className="text-zinc-500 text-xs">GAMEPAD API Integration</span>
                 </div>
-
                 {connectedGamepads.length === 0 ? (
-                  <div className="text-zinc-500 p-4 border border-dashed border-zinc-800 text-center uppercase tracking-wider">
+                  <div className="text-zinc-500 p-4 border border-dashed border-zinc-200 text-center uppercase tracking-wider">
                     No Gamepad or RC Transmitter detected. Plug in your controller via USB.
                   </div>
                 ) : (
@@ -405,7 +399,7 @@ export const Settings: React.FC<SettingsProps> = ({ settings, setSettings, onRes
                     <div className="flex flex-col gap-2">
                       <label className="text-zinc-500 font-bold uppercase">Select Device:</label>
                       <select 
-                        className="bg-zinc-950 text-white border border-zinc-800 p-2 font-mono"
+                        className="bg-white text-black border border-black p-2 font-mono"
                         onChange={e => {
                           const gp = connectedGamepads.find(g => g.id === e.target.value);
                           if (gp) setupDefaultGamepad(gp);
@@ -418,23 +412,22 @@ export const Settings: React.FC<SettingsProps> = ({ settings, setSettings, onRes
                         ))}
                       </select>
                     </div>
-
                     {settings.gamepadMapping && (
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
                         {/* Axes Calibration */}
-                        <div className="flex flex-col gap-4 border border-zinc-900 p-4">
-                          <span className="text-white font-black uppercase tracking-wider mb-2 border-b border-zinc-800 pb-1">Channels Calibration</span>
+                        <div className="flex flex-col gap-4 border border-black p-4 bg-white">
+                          <span className="text-black font-black uppercase tracking-wider mb-2 border-b border-zinc-200 pb-1">Channels Calibration</span>
                           
                           {(['throttle', 'yaw', 'pitch', 'roll'] as const).map(axis => {
                             const map = settings.gamepadMapping![axis];
                             return (
-                              <div key={axis} className="flex flex-col gap-1 border-b border-zinc-900 pb-3 last:border-b-0">
+                              <div key={axis} className="flex flex-col gap-1 border-b border-zinc-200 pb-3 last:border-b-0">
                                 <div className="flex justify-between items-center">
-                                  <span className="font-bold text-zinc-300 uppercase">{axis}</span>
+                                  <span className="font-bold text-black uppercase">{axis}</span>
                                   <div className="flex items-center gap-2">
                                     <button
                                       onClick={() => startCalibration(axis)}
-                                      className={`px-3 py-1 font-black text-[10px] uppercase border transition-all ${calibrationAxis === axis ? 'bg-red-600 border-red-600 text-white animate-pulse' : 'bg-zinc-800 border-zinc-700 hover:bg-zinc-700 text-white'}`}
+                                      className={`px-3 py-1 font-black text-[10px] uppercase border transition-all ${calibrationAxis === axis ? 'bg-red-600 border-red-600 text-white animate-pulse' : 'bg-white border-black hover:bg-zinc-100 text-black'}`}
                                     >
                                       {calibrationAxis === axis ? 'Calibrating...' : 'Calibrate'}
                                     </button>
@@ -452,7 +445,7 @@ export const Settings: React.FC<SettingsProps> = ({ settings, setSettings, onRes
                                             }
                                           };
                                         })}
-                                        className="accent-cyan-500"
+                                        className="accent-red-600"
                                       />
                                       INVERT
                                     </label>
@@ -469,21 +462,20 @@ export const Settings: React.FC<SettingsProps> = ({ settings, setSettings, onRes
                         </div>
 
                         {/* Interactive Axis Monitor */}
-                        <div className="flex flex-col gap-4 border border-zinc-900 p-4">
-                          <span className="text-white font-black uppercase tracking-wider mb-2 border-b border-zinc-800 pb-1">Live Monitor</span>
-                          
+                        <div className="flex flex-col gap-4 border border-black p-4 bg-white text-black">
+                          <span className="text-black font-black uppercase tracking-wider mb-2 border-b border-zinc-200 pb-1">Live Monitor</span>
                           {calibrationAxis ? (
                             <div className="flex flex-col gap-3 justify-center items-center h-full text-center">
-                              <span className="text-amber-500 font-bold uppercase animate-pulse">MOVE STICK TO EXTREME ENDS</span>
-                              <div className="text-white text-lg font-bold">
-                                Current Raw: <span className="text-cyan-400">{calibrationVals.current.toFixed(4)}</span>
+                              <span className="text-red-600 font-bold uppercase animate-pulse">MOVE STICK TO EXTREME ENDS</span>
+                              <div className="text-black text-lg font-bold">
+                                Current Raw: <span className="text-red-600">{calibrationVals.current.toFixed(4)}</span>
                               </div>
                               <div className="text-zinc-500 text-[10px]">
                                 Observed Range: [{calibrationVals.min.toFixed(2)}, {calibrationVals.max.toFixed(2)}]
                               </div>
                               <button 
                                 onClick={saveCalibration}
-                                className="mt-4 bg-white text-black font-black uppercase tracking-widest px-4 py-2 hover:bg-zinc-200 border border-white"
+                                className="mt-4 bg-white text-black font-black uppercase tracking-widest px-4 py-2 hover:bg-zinc-100 border border-black"
                               >
                                 SAVE CALIBRATION
                               </button>
@@ -512,16 +504,16 @@ export const Settings: React.FC<SettingsProps> = ({ settings, setSettings, onRes
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 font-mono text-xs">
               
               {/* Presets Selection */}
-              <div className="flex flex-col gap-4 border border-zinc-900 p-4">
-                <span className="text-white font-black uppercase tracking-wider mb-2 border-b border-zinc-800 pb-1">Select Physics Preset</span>
+              <div className="flex flex-col gap-4 border border-black p-4 bg-white text-black">
+                <span className="text-black font-black uppercase tracking-wider mb-2 border-b border-zinc-200 pb-1">Select Physics Preset</span>
                 <div className="flex flex-col gap-2">
                   {PHYSICS_PRESETS.map(preset => (
                     <button
                       key={preset.name}
                       onClick={() => selectPreset(preset.name)}
-                      className="border border-zinc-800 hover:border-zinc-700 bg-zinc-950 p-3 text-left transition-all hover:bg-zinc-900 flex flex-col gap-1 rounded-none"
+                      className="border border-black bg-white p-3 text-left transition-all hover:bg-zinc-100 flex flex-col gap-1 rounded-none text-black"
                     >
-                      <span className="text-white font-bold">{preset.name}</span>
+                      <span className="font-bold">{preset.name}</span>
                       <span className="text-zinc-500 text-[10px] leading-relaxed">{preset.description}</span>
                     </button>
                   ))}
@@ -529,8 +521,8 @@ export const Settings: React.FC<SettingsProps> = ({ settings, setSettings, onRes
               </div>
 
               {/* Adjust Parameters */}
-              <div className="flex flex-col gap-4 border border-zinc-900 p-4">
-                <span className="text-white font-black uppercase tracking-wider mb-2 border-b border-zinc-800 pb-1">Rigid Body Constants</span>
+              <div className="flex flex-col gap-4 border border-black p-4 bg-white text-black">
+                <span className="text-black font-black uppercase tracking-wider mb-2 border-b border-zinc-200 pb-1">Rigid Body Constants</span>
                 <div className="flex flex-col gap-3 font-mono">
                   
                   <div className="flex justify-between items-center">
@@ -540,12 +532,11 @@ export const Settings: React.FC<SettingsProps> = ({ settings, setSettings, onRes
                         type="number" min="0.01" max="5.00" step="0.05"
                         value={settings.physics.mass}
                         onChange={e => setSettings(prev => ({ ...prev, physics: { ...prev.physics, mass: parseFloat(e.target.value) || 0.5 } }))}
-                        className="w-16 bg-zinc-950 border border-zinc-800 text-white font-bold p-1 text-center"
+                        className="w-16 bg-white border border-black text-black font-bold p-1 text-center"
                       />
                       <span className="text-zinc-500 w-6">kg</span>
                     </div>
                   </div>
-
                   <div className="flex justify-between items-center">
                     <span className="text-zinc-500 font-bold uppercase">Gravity acceleration</span>
                     <div className="flex items-center gap-2">
@@ -553,12 +544,11 @@ export const Settings: React.FC<SettingsProps> = ({ settings, setSettings, onRes
                         type="number" min="0.00" max="25.00" step="0.5"
                         value={settings.physics.gravity}
                         onChange={e => setSettings(prev => ({ ...prev, physics: { ...prev.physics, gravity: parseFloat(e.target.value) || 9.81 } }))}
-                        className="w-16 bg-zinc-950 border border-zinc-800 text-white font-bold p-1 text-center"
+                        className="w-16 bg-white border border-black text-black font-bold p-1 text-center"
                       />
                       <span className="text-zinc-500 w-6">m/s²</span>
                     </div>
                   </div>
-
                   <div className="flex justify-between items-center">
                     <span className="text-zinc-500 font-bold uppercase">Propeller Max Thrust</span>
                     <div className="flex items-center gap-2">
@@ -566,32 +556,29 @@ export const Settings: React.FC<SettingsProps> = ({ settings, setSettings, onRes
                         type="number" min="1.00" max="150.00" step="1.0"
                         value={settings.physics.maxThrust}
                         onChange={e => setSettings(prev => ({ ...prev, physics: { ...prev.physics, maxThrust: parseFloat(e.target.value) || 30 } }))}
-                        className="w-16 bg-zinc-950 border border-zinc-800 text-white font-bold p-1 text-center"
+                        className="w-16 bg-white border border-black text-black font-bold p-1 text-center"
                       />
                       <span className="text-zinc-500 w-6">N</span>
                     </div>
                   </div>
-
                   <div className="flex justify-between items-center">
                     <span className="text-zinc-500 font-bold uppercase">Linear Aerodynamic Drag</span>
                     <input 
                       type="number" min="0.01" max="2.00" step="0.02"
                       value={settings.physics.dragLinear}
                       onChange={e => setSettings(prev => ({ ...prev, physics: { ...prev.physics, dragLinear: parseFloat(e.target.value) || 0.1 } }))}
-                      className="w-16 bg-zinc-950 border border-zinc-800 text-white font-bold p-1 text-center"
+                      className="w-16 bg-white border border-black text-black font-bold p-1 text-center"
                     />
                   </div>
-
                   <div className="flex justify-between items-center">
                     <span className="text-zinc-500 font-bold uppercase">Angular Aerodynamic Drag</span>
                     <input 
                       type="number" min="0.01" max="2.00" step="0.02"
                       value={settings.physics.dragAngular}
                       onChange={e => setSettings(prev => ({ ...prev, physics: { ...prev.physics, dragAngular: parseFloat(e.target.value) || 0.1 } }))}
-                      className="w-16 bg-zinc-950 border border-zinc-800 text-white font-bold p-1 text-center"
+                      className="w-16 bg-white border border-black text-black font-bold p-1 text-center"
                     />
                   </div>
-
                   <div className="flex justify-between items-center">
                     <span className="text-zinc-500 font-bold uppercase">Motor Response Time</span>
                     <div className="flex items-center gap-2">
@@ -599,7 +586,7 @@ export const Settings: React.FC<SettingsProps> = ({ settings, setSettings, onRes
                         type="number" min="0.005" max="0.500" step="0.005"
                         value={settings.physics.motorResponseTime}
                         onChange={e => setSettings(prev => ({ ...prev, physics: { ...prev.physics, motorResponseTime: parseFloat(e.target.value) || 0.03 } }))}
-                        className="w-16 bg-zinc-950 border border-zinc-800 text-white font-bold p-1 text-center"
+                        className="w-16 bg-white border border-black text-black font-bold p-1 text-center"
                       />
                       <span className="text-zinc-500 w-6">s</span>
                     </div>
@@ -615,7 +602,7 @@ export const Settings: React.FC<SettingsProps> = ({ settings, setSettings, onRes
       </div>
       
       {/* Footer copyright / info */}
-      <div className="border-t border-zinc-900 mt-6 pt-4 flex justify-between text-[10px] text-zinc-600 font-mono tracking-widest">
+      <div className="border-t border-zinc-200 mt-6 pt-4 flex justify-between text-[10px] text-zinc-500 font-mono tracking-widest">
         <span>ANTIGRAVITY SIM v1.0.0</span>
         <span>GRID ALIGNED SYSTEM PRESET - MULTIGP VERIFIED</span>
       </div>

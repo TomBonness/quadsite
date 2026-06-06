@@ -74,7 +74,7 @@ export function processAxis(value: number, mapping: { min: number; max: number; 
   const max = Math.max(mapping.min, mapping.max);
   const clamped = Math.max(min, Math.min(max, value));
   
-  let result = 0;
+  let result: number;
   if (isThrottle) {
     // Map [min, max] to [0, 1]
     const range = max - min;
