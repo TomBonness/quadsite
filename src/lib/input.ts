@@ -2,11 +2,20 @@ import type { RawInput, GamepadMapping, KeyboardMapping, SimulatorSettings } fro
 
 // Global keyboard state tracker
 const keysPressed: Record<string, boolean> = {};
-
+let keyboardArmed = false;
+export function setKeyboardArmed(armed: boolean) {
+  keyboardArmed = armed;
+}
 if (typeof window !== 'undefined') {
   window.addEventListener('keydown', (e) => {
-    keysPressed[e.key.toLowerCase()] = true;
-    keysPressed[e.code.toLowerCase()] = true; // Support code for layout independence
+    const key = e.key.toLowerCase();
+    const code = e.code.toLowerCase();
+    // Toggle arm state on spacebar press (edge-triggered)
+    if ((key === ' ' || code === 'space') && !e.repeat) {
+      keyboardArmed = !keyboardArmed;
+    }
+    keysPressed[key] = true;
+    keysPressed[code] = true;
   });
   window.addEventListener('keyup', (e) => {
     keysPressed[e.key.toLowerCase()] = false;
@@ -46,7 +55,10 @@ export function getKeyboardInput(mapping: KeyboardMapping, dt: number): RawInput
   if (keysPressed[mapping.yawRight.toLowerCase()]) yaw += 1.0;
 
   // Armed switch (space)
-  const arm = keysPressed[mapping.reset.toLowerCase()] ? false : keysPressed[' '] || keysPressed['space'];
+  if (keysPressed[mapping.reset.toLowerCase()]) {
+    keyboardArmed = false;
+  }
+  const arm = keyboardArmed;
 
   // Mode switch (m)
   const modeSwitch = keysPressed[mapping.changeMode.toLowerCase()];

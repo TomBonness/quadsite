@@ -69,9 +69,9 @@ export const HUD: React.FC<HUDProps> = ({ droneState, gatesCount }) => {
       <div className="absolute top-6 right-6 flex flex-col gap-1 items-end">
         <div className="flex items-center gap-2">
           {armed ? (
-            <span className="text-red-600 font-bold px-2 py-0.5 border border-red-600 bg-white tracking-widest uppercase">ARMED</span>
+            <span className="text-red-600 font-black tracking-widest uppercase">ARMED</span>
           ) : (
-            <span className="text-black font-bold px-2 py-0.5 border border-black bg-white tracking-widest uppercase">DISARMED</span>
+            <span className="text-black font-black tracking-widest uppercase">DISARMED</span>
           )}
         </div>
         <div className="mt-1">
@@ -121,7 +121,7 @@ export const HUD: React.FC<HUDProps> = ({ droneState, gatesCount }) => {
       </div>
 
       {/* Bottom Middle: Racing Telemetry */}
-      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-4 text-xs md:text-sm font-bold bg-white/90 border border-black px-6 py-2 rounded-none">
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-4 text-xs md:text-sm font-bold text-black">
         <span>GATES: {passedGatesCount}/{gatesCount}</span>
         <span>|</span>
         <span>LAP: {formatTime(currentLapTime)}</span>
@@ -147,7 +147,7 @@ export const HUD: React.FC<HUDProps> = ({ droneState, gatesCount }) => {
       {/* Control Input Guide (Only shown when disarmed) */}
       {!armed && (
         <div 
-          className="absolute top-1/2 left-6 -translate-y-1/2 bg-white border border-black p-6 max-w-sm rounded-none pointer-events-auto text-xs text-black" 
+          className="absolute top-1/2 left-6 -translate-y-1/2 border border-black p-6 max-w-sm rounded-none pointer-events-auto text-xs text-black" 
         >
           <h3 className="font-black uppercase text-sm mb-3 border-b border-black pb-2 tracking-wider">Control Configuration</h3>
           <div className="grid grid-cols-2 gap-y-2 gap-x-4 mb-4 font-sans">

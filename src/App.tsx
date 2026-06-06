@@ -4,7 +4,7 @@ import { TRACK_GATES } from './types/drone';
 import { Simulator } from './components/Simulator';
 import { HUD } from './components/HUD';
 import { Settings } from './components/Settings';
-import { resetKeyboardThrottle } from './lib/input';
+import { resetKeyboardThrottle, setKeyboardArmed } from './lib/input';
 
 const LOCAL_STORAGE_KEY = 'quadsite_settings';
 
@@ -91,14 +91,18 @@ export default function App() {
   }, [settings]);
 
   // Handle crash reset
+  // Handle crash reset
   const handleCrash = () => {
     setCrashed(true);
+    setKeyboardArmed(false);
   };
 
+  // Process reset action
   // Process reset action
   const resetFlight = () => {
     setCrashed(false);
     resetKeyboardThrottle(0.1);
+    setKeyboardArmed(false);
     setResetTrigger(prev => prev + 1);
   };
 
@@ -131,7 +135,7 @@ export default function App() {
         <div className="flex items-center gap-6">
           <span className="font-black text-sm tracking-widest text-black uppercase flex items-center gap-2">
             <span className="w-2.5 h-2.5 bg-red-600 inline-block" />
-            ANTIGRAVITY SYSTEMS
+            QUADSITE SYSTEMS
           </span>
         </div>
         <div className="flex items-center gap-4">
@@ -161,19 +165,19 @@ export default function App() {
           {/* Classic OSD Layout */}
           <HUD droneState={droneState} gatesCount={TRACK_GATES.length} />
 
-          {/* Hard Crash Overlay in Swiss style (Red box, bold text, no decoration) */}
+          {/* Hard Crash Overlay in Swiss style (Bold, solid red poster, thick black text, no decoration) */}
           {crashed && (
-            <div className="absolute inset-0 bg-white/70 backdrop-blur-sm z-30 flex items-center justify-center pointer-events-auto">
-              <div className="bg-red-600 border-4 border-black text-black max-w-md w-full p-8 text-center rounded-none">
-                <h2 className="text-4xl font-black tracking-tighter uppercase mb-4">
+            <div className="absolute inset-0 bg-red-600 z-30 flex flex-col items-center justify-center pointer-events-auto p-8 text-center select-none font-sans">
+              <div className="max-w-xl">
+                <h2 className="text-6xl font-black tracking-tighter uppercase mb-6 leading-none text-black">
                   CRASH DETECTED
                 </h2>
-                <p className="font-mono text-sm font-bold uppercase mb-6 leading-relaxed">
+                <p className="font-mono text-base font-bold uppercase mb-8 leading-relaxed max-w-md mx-auto text-black font-extrabold">
                   IMPACT FORCE EXCEEDED SAFE STRUCTURAL COEFFICIENT. DRONE IS DISARMED.
                 </p>
                 <button
                   onClick={resetFlight}
-                  className="bg-black hover:bg-zinc-900 text-white font-black uppercase tracking-widest text-xs py-3 px-6 rounded-none transition-colors border-2 border-black"
+                  className="bg-black hover:bg-zinc-900 text-white font-black uppercase tracking-widest text-sm py-4 px-8 rounded-none transition-colors border-2 border-black"
                 >
                   PRESS R OR CLICK HERE TO RESET
                 </button>

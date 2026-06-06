@@ -16,7 +16,13 @@ export const Settings: React.FC<SettingsProps> = ({ settings, setSettings, onRes
   const [calibrationAxis, setCalibrationAxis] = useState<string | null>(null);
   const [calibrationVals, setCalibrationVals] = useState<{ min: number; max: number; current: number }>({ min: 0, max: 0, current: 0 });
 
+  const settingsRef = React.useRef(settings);
+  React.useEffect(() => {
+    settingsRef.current = settings;
+  }, [settings]);
+  const baselineAxesRef = React.useRef<number[]>([]);
   // Poll for connected gamepads
+  // Listen for gamepad connections and poll for connected gamepads
   useEffect(() => {
     const checkGamepads = () => {
       if (typeof navigator !== 'undefined' && navigator.getGamepads) {
@@ -25,58 +31,100 @@ export const Settings: React.FC<SettingsProps> = ({ settings, setSettings, onRes
         setConnectedGamepads(active);
       }
     };
-
     checkGamepads();
+    const handleConnected = () => {
+      checkGamepads();
+    };
+    const handleDisconnected = () => {
+      checkGamepads();
+    };
+    window.addEventListener('gamepadconnected', handleConnected);
+    window.addEventListener('gamepaddisconnected', handleDisconnected);
     const interval = setInterval(checkGamepads, 1000);
-    return () => clearInterval(interval);
+    return () => {
+      window.removeEventListener('gamepadconnected', handleConnected);
+      window.removeEventListener('gamepaddisconnected', handleDisconnected);
+      clearInterval(interval);
+    };
   }, []);
 
   // Live monitor for gamepad calibration
+  // Live monitor for gamepad calibration with automatic axis detection
   useEffect(() => {
-    if (!calibrationAxis) return;
-
+    if (!calibrationAxis) {
+      baselineAxesRef.current = [];
+      return;
+    }
+    baselineAxesRef.current = []; // Reset baseline to capture on first frame
     let animId: number;
     const poll = () => {
-      if (typeof navigator !== 'undefined' && navigator.getGamepads && settings.gamepadMapping) {
+      const currentSettings = settingsRef.current;
+      if (typeof navigator !== 'undefined' && navigator.getGamepads && currentSettings.gamepadMapping) {
         const gps = navigator.getGamepads();
         let gp: Gamepad | null = null;
         for (let i = 0; i < gps.length; i++) {
-          if (gps[i] && gps[i]?.id.includes(settings.gamepadMapping.id)) {
+          if (gps[i] && gps[i]?.id.includes(currentSettings.gamepadMapping.id)) {
             gp = gps[i];
             break;
           }
         }
         if (!gp) {
-          // fallback to first gamepad
           gp = gps.find(Boolean) || null;
         }
-
         if (gp) {
-          const mapping = settings.gamepadMapping;
-          let axisIdx = 0;
-          switch (calibrationAxis) {
-            case 'throttle': axisIdx = mapping.throttle.axisIndex; break;
-            case 'yaw': axisIdx = mapping.yaw.axisIndex; break;
-            case 'pitch': axisIdx = mapping.pitch.axisIndex; break;
-            case 'roll': axisIdx = mapping.roll.axisIndex; break;
+          // Capture baseline once
+          if (baselineAxesRef.current.length === 0) {
+            baselineAxesRef.current = Array.from(gp.axes);
           }
-
-          if (axisIdx < gp.axes.length) {
-            const rawVal = gp.axes[axisIdx];
-            setCalibrationVals(prev => ({
-              current: rawVal,
-              min: Math.min(prev.min, rawVal),
-              max: Math.max(prev.max, rawVal)
-            }));
+          // Scan all axes for deflection relative to the baseline
+          let detectedAxisIdx = -1;
+          let maxDeflection = 0.2; // 0.2 is a solid threshold to prevent jitter detection
+          for (let i = 0; i < gp.axes.length; i++) {
+            const baselineVal = baselineAxesRef.current[i] !== undefined ? baselineAxesRef.current[i] : 0;
+            const currentVal = gp.axes[i];
+            const deflection = Math.abs(currentVal - baselineVal);
+            if (deflection > maxDeflection) {
+              maxDeflection = deflection;
+              detectedAxisIdx = i;
+            }
+          }
+          const axis = calibrationAxis as 'throttle' | 'yaw' | 'pitch' | 'roll';
+          // If a new axis index is detected, update the state
+          if (detectedAxisIdx !== -1 && currentSettings.gamepadMapping[axis].axisIndex !== detectedAxisIdx) {
+            setSettings(prev => {
+              if (!prev.gamepadMapping) return prev;
+              return {
+                ...prev,
+                gamepadMapping: {
+                  ...prev.gamepadMapping,
+                  [axis]: {
+                    ...prev.gamepadMapping[axis],
+                    axisIndex: detectedAxisIdx
+                  }
+                }
+              };
+            });
+          }
+          // Read the current raw value from the mapped axis index
+          const latestMapping = settingsRef.current.gamepadMapping;
+          if (latestMapping) {
+            const axisIdx = latestMapping[axis].axisIndex;
+            if (axisIdx < gp.axes.length) {
+              const rawVal = gp.axes[axisIdx];
+              setCalibrationVals(prev => ({
+                current: rawVal,
+                min: Math.min(prev.min, rawVal),
+                max: Math.max(prev.max, rawVal)
+              }));
+            }
           }
         }
       }
       animId = requestAnimationFrame(poll);
     };
-
     animId = requestAnimationFrame(poll);
     return () => cancelAnimationFrame(animId);
-  }, [calibrationAxis, settings.gamepadMapping]);
+  }, [calibrationAxis]);
 
   // Handle Preset selection
   const selectPreset = (presetName: string) => {
@@ -202,7 +250,7 @@ export const Settings: React.FC<SettingsProps> = ({ settings, setSettings, onRes
             SIM CALIBRATION
           </h1>
           <p className="text-zinc-500 font-sans text-xs mt-2 leading-relaxed tracking-wide">
-            SWISS GRID STABILIZED FLIGHT SIMULATION FOR LOW LATENCY RADIO CONTROL. 
+            GRID STABILIZED FLIGHT SIMULATION FOR LOW LATENCY RADIO CONTROL. 
             GRID MAPPINGS COMPLY WITH THE BETAFLIGHT RATE SPECIFICATION.
           </p>
         </div>
@@ -603,7 +651,7 @@ export const Settings: React.FC<SettingsProps> = ({ settings, setSettings, onRes
       
       {/* Footer copyright / info */}
       <div className="border-t border-zinc-200 mt-6 pt-4 flex justify-between text-[10px] text-zinc-500 font-mono tracking-widest">
-        <span>ANTIGRAVITY SIM v1.0.0</span>
+        <span>QUADSITE SIM v1.0.0</span>
         <span>GRID ALIGNED SYSTEM PRESET - MULTIGP VERIFIED</span>
       </div>
 
